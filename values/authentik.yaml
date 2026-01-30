@@ -1,0 +1,19 @@
+persistence:
+  storageClass: local-nas
+  size: 50Gi
+
+service:
+  type: ClusterIP
+
+ingress:
+  enabled: true
+  hosts:
+    - host: "auth.example.com"
+      paths: ["/"]
+  tls:
+    - secretName: auth-tls
+      hosts:
+        - "auth.example.com"
+
+auth:
+  adminPassword: "CHANGE_ME" # verschlüsseln mit SOPS

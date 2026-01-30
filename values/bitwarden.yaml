@@ -1,0 +1,20 @@
+persistence:
+  storageClass: local-nas
+  size: 20Gi
+
+service:
+  type: ClusterIP
+
+ingress:
+  enabled: true
+  hosts:
+    - host: "vault.example.com"
+      paths: ["/"]
+  tls:
+    - secretName: vault-tls
+      hosts:
+        - "vault.example.com"
+
+admin:
+  email: "admin@example.com"
+  password: "CHANGE_ME" # SOPS verschlüsseln

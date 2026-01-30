@@ -1,0 +1,30 @@
+repositories:
+  - name: bitwarden
+    url: https://charts.bitwarden.com
+  - name: authentik
+    url: https://charts.goauthentik.io
+  - name: immich
+    url: https://helm.immich.app
+
+releases:
+  - name: authentik
+    namespace: auth
+    chart: authentik/authentik
+    version: 2026.1.0
+    createNamespace: true
+    values:
+      - values/authentik.yaml
+
+  - name: bitwarden
+    namespace: vault
+    chart: bitwarden/bitwarden
+    createNamespace: true
+    values:
+      - values/bitwarden.yaml
+
+  - name: immich
+    namespace: photos
+    chart: immich/immich
+    createNamespace: true
+    values:
+      - values/immich.yaml
