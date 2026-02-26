@@ -1,0 +1,7 @@
+creation_rules:
+  - encrypted_regex: '^(data|stringData)$'
+    age:
+      # StarryNight
+      - age104xl76udz4syr3x4ltju2rcdd0mkvran3jv4520lyewgy2r0lgss9xly5z
+      # hestia
+      - age14jnakt2vsmd37czh5wgn7ghkr276papa0vx2algs2lwhu9t3ufzsav9mlk

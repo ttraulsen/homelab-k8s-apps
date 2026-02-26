@@ -1,0 +1,24 @@
+persistence:
+  enabled: true
+  storageClass: local-nas
+  size: 20Gi
+
+env:
+  - name: DATABASE_URL
+    value: "postgresql://vaultwarden:$(VAULTWARDEN_DB_PASSWORD)@postgres.database.svc.cluster.local/vaultwarden"
+  - name: VAULTWARDEN_DB_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: postgres-credentials
+        key: vaultwardenPassword
+
+service:
+  type: ClusterIP
+
+ingress:
+  enabled: true
+  host: "vault.hestia"
+  tls:
+    - secretName: vault-tls
+      hosts:
+        - "vault.hestia"

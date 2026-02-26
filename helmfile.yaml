@@ -1,30 +1,17 @@
-repositories:
-  - name: bitwarden
-    url: https://charts.bitwarden.com
-  - name: authentik
-    url: https://charts.goauthentik.io
-  - name: immich
-    url: https://helm.immich.app
+# Main helmfile - references all service helmfiles
+helmDefaults:
+  atomic: false
+  wait: true
+  timeout: 10m
 
-releases:
-  - name: authentik
-    namespace: auth
-    chart: authentik/authentik
-    version: 2026.1.0
-    createNamespace: true
-    values:
-      - values/authentik.yaml
+helmfiles:
+  - path: secrets-chart/helmfile.yaml
 
-  - name: bitwarden
-    namespace: vault
-    chart: bitwarden/bitwarden
-    createNamespace: true
-    values:
-      - values/bitwarden.yaml
+  - path: postgres/helmfile.yaml
 
-  - name: immich
-    namespace: photos
-    chart: immich/immich
-    createNamespace: true
-    values:
-      - values/immich.yaml
+  - path: authentik/helmfile.yaml
+
+  - path: vaultwarden/helmfile.yaml
+
+  # - path: bitwarden/helmfile.yaml
+  # - path: immich/helmfile.yaml

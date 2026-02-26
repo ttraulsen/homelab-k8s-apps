@@ -1,0 +1,6 @@
+releases:
+  - name: secrets
+    namespace: default
+    chart: ./
+    secrets:
+      - secrets.yaml

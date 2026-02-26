@@ -1,0 +1,13 @@
+repositories:
+  - name: immich
+    url: https://immich-app.github.io/immich-charts
+
+releases:
+  - name: immich
+    namespace: photos
+    chart: immich/immich
+    createNamespace: true
+    version: 0.10.3
+    values:
+      - values.yaml
+      - secrets.yaml

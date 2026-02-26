@@ -1,0 +1,11 @@
+repositories:
+  - name: vaultwarden
+    url: https://gissilabs.github.io/charts/
+
+releases:
+  - name: vaultwarden
+    namespace: vault
+    chart: vaultwarden/vaultwarden
+    createNamespace: true
+    values:
+      - values.yaml
