@@ -1,11 +1,12 @@
 repositories:
-  - name: bitnami
-    url: https://charts.bitnami.com/bitnami
+  - name: groundhog2k
+    url: https://groundhog2k.github.io/helm-charts/
 
 releases:
   - name: postgres
     namespace: database
-    chart: bitnami/postgresql
+    chart: groundhog2k/postgres
+    version: 1.6.1
     createNamespace: true
     values:
       - values.yaml

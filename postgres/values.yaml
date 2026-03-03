@@ -1,39 +1,43 @@
-auth:
+settings:
   existingSecret: postgres-credentials
-  secretKeys:
-    adminPasswordKey: adminPassword
+  superuserPassword:
+    secretKey: adminPassword
 
-persistence:
-  enabled: true
-  size: 10Gi
-  storageClassName: local-path
+storage:
+  requestedSize: 10Gi
+  className: local-path
 
-primary:
-  resources:
-    requests:
-      memory: "256Mi"
-      cpu: "100m"
-    limits:
-      memory: "512Mi"
-      cpu: "500m"
-  initdb:
-    databases:
-      authentik: {}
-      vaultwarden: {}
-    users:
-      - username: authentik
-        password:
-          valueFrom:
-            secretKeyRef:
-              name: postgres-credentials
-              key: authentikPassword
-        databases:
-          - authentik
-      - username: vaultwarden
-        password:
-          valueFrom:
-            secretKeyRef:
-              name: postgres-credentials
-              key: vaultwardenPassword
-        databases:
-          - vaultwarden
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "100m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+extraEnvSecrets:
+  - postgres-credentials
+
+customScripts:
+  init.sh: |
+    #!/bin/bash
+    set -e
+
+    psql -v ON_ERROR_STOP=1 --username postgres <<-EOSQL
+        DO \$\$
+        BEGIN
+            IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'authentik') THEN
+                CREATE USER authentik WITH PASSWORD '${authentikPassword}';
+            END IF;
+            IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'vaultwarden') THEN
+                CREATE USER vaultwarden WITH PASSWORD '${vaultwardenPassword}';
+            END IF;
+        END
+        \$\$;
+    EOSQL
+
+    for db in authentik vaultwarden; do
+        psql -v ON_ERROR_STOP=1 --username postgres -tc \
+            "SELECT 1 FROM pg_database WHERE datname = '$db'" | grep -q 1 \
+        || psql -v ON_ERROR_STOP=1 --username postgres -c "CREATE DATABASE $db OWNER $db"
+    done

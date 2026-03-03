@@ -7,11 +7,11 @@ helmDefaults:
 helmfiles:
   - path: secrets-chart/helmfile.yaml
 
-  - path: postgres/helmfile.yaml
+  - path: postgres/helmfile.yaml.gotmpl
 
-  - path: authentik/helmfile.yaml
+  - path: authentik/helmfile.yaml.gotmpl
 
-  - path: vaultwarden/helmfile.yaml
+  - path: vaultwarden/helmfile.yaml.gotmpl
 
   # - path: bitwarden/helmfile.yaml
   # - path: immich/helmfile.yaml
