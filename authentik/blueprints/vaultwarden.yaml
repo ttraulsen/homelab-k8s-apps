@@ -1,0 +1,66 @@
+version: 1
+metadata:
+  name: Vaultwarden
+  labels:
+    blueprints.goauthentik.io/description: OIDC provider and application for Vaultwarden
+
+# ── Generic OIDC application template ────────────────────────────────────────
+# To add another OIDC application, copy this file and adjust:
+#   1. All occurrences of "vaultwarden" / "Vaultwarden"
+#   2. redirect_uris     → the callback URL of the new application
+#   3. meta_launch_url   → the application's start URL
+#   4. Env vars          → add CLIENT_ID and CLIENT_SECRET to:
+#                            - secrets-chart/secrets.yaml under authentik-credentials
+#                            - authentik/values.yaml under global.env
+# ─────────────────────────────────────────────────────────────────────────────
+
+entries:
+  # ── OIDC Provider ────────────────────────────────────────────────────────
+  - model: authentik_providers_oauth2.oauth2provider
+    id: vaultwarden-provider
+    state: present
+    identifiers:
+      name: Vaultwarden
+    attrs:
+      name: Vaultwarden
+
+      # confidential: server-side app, client_secret is required
+      # public: browser/mobile app, no client_secret needed
+      client_type: confidential
+      client_id: !Env VAULTWARDEN_OIDC_CLIENT_ID
+      client_secret: !Env VAULTWARDEN_OIDC_CLIENT_SECRET
+
+      # implicit-consent: no "Authorize" prompt (suitable for internal/trusted apps)
+      # explicit-consent: user sees an "Authorize" screen
+      authorization_flow: !Find
+        - authentik_flows.flow
+        - - slug
+          - default-provider-authorization-implicit-consent
+
+      redirect_uris:
+        - matching_mode: strict
+          url: "https://vault.hestia/identity/connect/oidc-signin"
+
+      # hashed_user_id: stable, private — recommended default
+      # user_username / user_email: human-readable but exposes user data to the app
+      sub_mode: hashed_user_id
+      include_claims_in_id_token: true
+
+      signing_key: !Find
+        - authentik_crypto.certificatekeypair
+        - - name
+          - authentik Self-signed Certificate
+
+  # ── Application (shown in Authentik's app dashboard) ─────────────────────
+  - model: authentik_core.application
+    state: present
+    identifiers:
+      slug: vaultwarden
+    attrs:
+      name: Vaultwarden
+      slug: vaultwarden
+      provider: !KeyOf vaultwarden-provider
+      # any: access granted if ANY bound policy allows it
+      # all: access granted only if ALL bound policies allow it
+      policy_engine_mode: any
+      meta_launch_url: "https://vault.hestia"

@@ -10,3 +10,9 @@ releases:
     createNamespace: true
     values:
       - values.yaml
+    hooks:
+      - events: ["presync"]
+        command: "bash"
+        args:
+          - "-c"
+          - "kubectl create configmap authentik-blueprints --from-file=blueprints/ -n auth --dry-run=client -o yaml | kubectl apply -f -"

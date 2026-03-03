@@ -11,18 +11,38 @@ authentik:
     port: 5432
     name: authentik
     user: authentik
-    password:
+
+global:
+  env:
+    - name: AUTHENTIK_POSTGRESQL__PASSWORD
       valueFrom:
         secretKeyRef:
-          name: postgres-credentials
-          key: authentikPassword
+          name: authentik-credentials
+          key: postgresPassword
+    - name: AUTHENTIK_SECRET_KEY
+      valueFrom:
+        secretKeyRef:
+          name: authentik-credentials
+          key: secretKey
+    # OIDC client credentials for blueprints — add one pair per application.
+    # client_id is not sensitive; client_secret must be in authentik-credentials.
+    - name: VAULTWARDEN_OIDC_CLIENT_ID
+      value: "vaultwarden"
+    - name: VAULTWARDEN_OIDC_CLIENT_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: authentik-credentials
+          key: vaultWardenOidcSecret
+
+blueprints:
+  configMaps:
+    - authentik-blueprints
 
 server:
   ingress:
     enabled: true
     hosts:
-      - host: "auth.hestia"
-        paths: ["/"]
+      - "auth.hestia"
     tls:
       - secretName: auth-tls
         hosts:
