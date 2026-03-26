@@ -1,0 +1,12 @@
+repositories:
+  - name: unknowniq
+    url: https://unknowniq.github.io/helm-charts
+
+releases:
+  - name: homepage
+    namespace: homepage
+    chart: unknowniq/homepage
+    version: 1.8.2
+    createNamespace: true
+    values:
+      - values.yaml

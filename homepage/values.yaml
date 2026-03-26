@@ -1,0 +1,21 @@
+enableRbac: true
+
+env:
+  - name: LOG_TARGETS
+    value: "stdout"
+  - name: HOMEPAGE_ALLOWED_HOSTS
+    value: "home.hestia"
+
+ingress:
+  main:
+    enabled: true
+    className: "traefik"
+    hosts:
+      - host: "home.hestia"
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: homepage-tls
+        hosts:
+          - "home.hestia"

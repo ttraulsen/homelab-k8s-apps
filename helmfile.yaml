@@ -13,5 +13,7 @@ helmfiles:
 
   - path: vaultwarden/helmfile.yaml.gotmpl
 
+  - path: homepage/helmfile.yaml
+
   # - path: bitwarden/helmfile.yaml
   # - path: immich/helmfile.yaml
