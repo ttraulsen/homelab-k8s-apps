@@ -17,8 +17,8 @@ service:
 
 ingress:
   enabled: true
-  host: "vault.hestia"
+  host: "vault.home.ey-timo-ey.de"
   tls:
     - secretName: vault-tls
       hosts:
-        - "vault.hestia"
+        - "vault.home.ey-timo-ey.de"

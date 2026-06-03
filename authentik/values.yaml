@@ -42,8 +42,8 @@ server:
   ingress:
     enabled: true
     hosts:
-      - "auth.hestia"
+      - "auth.home.ey-timo-ey.de"
     tls:
       - secretName: auth-tls
         hosts:
-          - "auth.hestia"
+          - "auth.home.ey-timo-ey.de"
